@@ -126,25 +126,21 @@ uint8_t clamp8(int val) {
 }
 
 void rxControls(uint8_t* controls) {
-  numRx = 0;
-  uint8_t received[6];
-  while (Serial.available() > 0){
-    recieved[numRx] = Serial.read();
-    if (received[numRx] == 0xFF){
-      break;
+    uint8_t numRx = 0;
+    uint8_t received[6];
+    while (Serial.available() > 0) {
+        uint8_t rx = Serial.read();
+        if (rx == 0xff) {
+            numRx = 0;
+        } else {
+            received[numRx] = rx;
+            numRx++;
+        }
+        if (numRx >= 6) {
+            for (int i = 0; i < 6; i++) {
+                controls[i] = received[i];
+            }
+            numRx = 0;
+        }
     }
-    if (numRx > 5){
-      return;
-    }
-  numRx += 1;
-  }
-  if (numRx == 5){
-    for (int i = 0; i < 6; i++){
-      *controls[i] = received[i];
-    }
-    return;
-  }
-  else{
-    return;
-  }
 }
