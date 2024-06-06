@@ -75,23 +75,20 @@ void setup() {
 
 void loop() {
   delay(50);
-  
-  uint8_t lstick_y = clamp8(map(analogRead(A0), 180, 780, 0, 255));
-  uint8_t lstick_x = clamp8(map(analogRead(A2), 220, 820, 0, 255));
 
-  uint8_t rstick_y = clamp8(map(analogRead(A1), 240, 770, 0, 255));
-  uint8_t rstick_x = clamp8(map(analogRead(A3), 70, 850, 0, 255));
+  lx = [REPLACE THIS STUFF];
+  ly = [REPLACE THIS STUFF];
+  lt = [REPLACE THIS STUFF];
+  rx = [REPLACE THIS STUFF];
+  ry = [REPLACE THIS STUFF];
+  rt = [REPLACE THIS STUFF];
+  lb = [REPLACE THIS STUFF];
+  rb = [REPLACE THIS STUFF];
 
-  uint8_t lpot = clamp8(map(analogRead(A5), 0, 1024, -30, 255));
-  uint8_t rpot = clamp8(map(analogRead(A4), 0, 1024, -30, 255));
+  char radiopacket[] = {lx, ly, lt, rx, ry, rt, lb, rb}; 
 
-  uint8_t lswitch = digitalRead(11);
-  uint8_t rswitch = digitalRead(12);
-
-  char radiopacket[] = {lstick_x, lstick_y, rstick_x, rstick_y, lpot, rpot, lswitch, rswitch};
-  
   Serial.println("Sending ");
-  //Serial.println(radiopacket);
+  // Serial.println(radiopacket);
 
   // Send a message!
   rf69.send((uint8_t *)radiopacket, 8);
@@ -115,13 +112,13 @@ void loop() {
   Serial.println(" ");
 }
 
-uint8_t clamp8(int val){
-  if(val > 255){
+uint8_t clamp8(int val) {
+  if (val > 255) {
     val = 255;
   }
-  if(val < 0){
+  if (val < 0) {
     val = 0;
   }
-  uint8_t out = (uint8_t) val;
+  uint8_t out = (uint8_t)val;
   return out;
 }
