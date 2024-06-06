@@ -24,9 +24,9 @@
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
 
-int16_t packetnum = 0; // packet counter, we increment per xmission
+int16_t packetnum = 0;  // packet counter, we increment per xmission
 
-uint8_t controls[6] = {0,0,0,0,0,0};
+uint8_t controls[6] = { 127, 127, 0, 127, 127, 0 };
 
 void setup() {
   Serial.begin(115200);
@@ -35,14 +35,9 @@ void setup() {
 
   pinMode(LED, OUTPUT);
   pinMode(RFM69_RST, OUTPUT);
-  pinMode(11, INPUT_PULLUP);
-  pinMode(12, INPUT_PULLUP);
+
   digitalWrite(RFM69_RST, LOW);
 
-  Serial.println("Feather RFM69 TX Test!");
-  Serial.println();
-
-  // manual reset
   digitalWrite(RFM69_RST, HIGH);
   delay(10);
   digitalWrite(RFM69_RST, LOW);
@@ -63,11 +58,11 @@ void setup() {
   // If you are using a high power RF69 eg RFM69HW, you *must* set a Tx power
   // with the ishighpowermodule flag set like this:
   rf69.setTxPower(
-      20, true); // range from 14-20 for power, 2nd arg must be true for 69HCW
+    20, true);  // range from 14-20 for power, 2nd arg must be true for 69HCW
 
   // The encryption key has to be the same as the one in the server
-  uint8_t key[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                   0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+  uint8_t key[] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
   rf69.setEncryptionKey(key);
 
   Serial.print("RFM69 radio @");
@@ -76,7 +71,7 @@ void setup() {
 }
 
 void loop() {
-  delay(50);
+  // delay(50);
   rxControls(controls);
 
   analogWrite(LED_BUILTIN, controls[2]);
@@ -97,21 +92,21 @@ uint8_t clamp8(int val) {
 }
 
 void rxControls(uint8_t* controls) {
-    uint8_t numRx = 0;
-    uint8_t received[6];
-    while (Serial.available() > 0) {
-        uint8_t rx = Serial.read();
-        if (rx == 0xff) {
-            numRx = 0;
-        } else {
-            received[numRx] = rx;
-            numRx++;
-        }
-        if (numRx >= 6) {
-            for (int i = 0; i < 6; i++) {
-                controls[i] = received[i];
-            }
-            numRx = 0;
-        }
+  uint8_t numRx = 0;
+  uint8_t received[6];
+  while (Serial.available() > 0) {
+    uint8_t rx = Serial.read();
+    if (rx == 0xff) {
+      numRx = 0;
+    } else {
+      received[numRx] = rx;
+      numRx++;
     }
+    if (numRx >= 6) {
+      for (int i = 0; i < 6; i++) {
+        controls[i] = received[i];
+      }
+      numRx = 0;
+    }
+  }
 }

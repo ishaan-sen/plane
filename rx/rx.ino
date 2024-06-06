@@ -39,11 +39,6 @@ double output;
 
 
 void setup() {
-  controller.begin(&theta, &output, &setpoint, 1, 0.1, 0);
-  controller.setWindUpLimits(-3, 3);
-  controller.setOutputLimits(-1, 1);
-  controller.reverse();
-
   esc.attach(5);
   esc.writeMicroseconds(950);
 
@@ -93,15 +88,6 @@ void setup() {
       delay(50);
     }
   }
-
-  lx = 128;
-  ly = 128;
-  lt = 128;
-  rx = 128;
-  ry = 128;
-  rt = 128;
-  lb = 0;
-  rb = 0;
 }
 
 void loop() {
@@ -113,16 +99,20 @@ void loop() {
     if (rf69.recv(buf, &len)) {
       if (!len)
         return;
+      analogWrite(13, (int) buf[2] * 4);
+      esc.writeMicroseconds(smap(buf[2]));
+      elevator.writeMicroseconds(smap(buf[4]));
+      // esc.writeMicroseconds(smap(buf[2]))
+      // esc.writeMicroseconds(smap(buf[2]))
+      // esc.writeMicroseconds(smap(buf[2]))
+      // esc.writeMicroseconds(smap(buf[2]))
+      // esc.writeMicroseconds(smap(buf[2]))
+      // esc.writeMicroseconds(smap(buf[2]))
 
-      lx = buf[0];
-      ly = buf[1];
-      lt = buf[2];
-      rx = buf[3];
-      ry = buf[4];
-      rt = buf[5];
-      lb = buf[6];
-      rb = buf[7];
     }
-    last_comms_millis = current_millis;
   }
+}
+
+int smap(uint8_t control){
+  return map(control, 0, 254, 1000, 2000);
 }
