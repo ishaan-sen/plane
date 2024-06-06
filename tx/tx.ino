@@ -78,40 +78,11 @@ void setup() {
 void loop() {
   delay(50);
   rxControls(controls);
-  lx = controls[0];
-  ly = controls[0];
-  lt = controls[0];
-  rx = controls[0];
-  ry = controls[0];
-  rt = controls[0];
-  lb = 0;
-  rb = 0;
 
-  char radiopacket[] = {lx, ly, lt, rx, ry, rt, lb, rb}; 
+  analogWrite(LED_BUILTIN, controls[2]);
 
-  Serial.println("Sending ");
-  // Serial.println(radiopacket);
-
-  // Send a message!
-  rf69.send((uint8_t *)radiopacket, 8);
+  rf69.send(controls, 6);
   rf69.waitPacketSent();
-
-  Serial.print(lstick_y);
-  Serial.print("\t");
-  Serial.print(lstick_x);
-  Serial.print("\t");
-  Serial.print(rstick_y);
-  Serial.print("\t");
-  Serial.print(rstick_x);
-  Serial.print("\t");
-  Serial.print(lpot);
-  Serial.print("\t");
-  Serial.print(rpot);
-  Serial.print("\t");
-  Serial.print(lswitch);
-  Serial.print("\t");
-  Serial.print(rswitch);
-  Serial.println(" ");
 }
 
 uint8_t clamp8(int val) {
