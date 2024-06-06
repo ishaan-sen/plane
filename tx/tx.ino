@@ -26,6 +26,8 @@ RH_RF69 rf69(RFM69_CS, RFM69_INT);
 
 int16_t packetnum = 0; // packet counter, we increment per xmission
 
+uint8_t controls[6] = {0,0,0,0,0,0};
+
 void setup() {
   Serial.begin(115200);
   // while (!Serial) delay(1); // Wait for Serial Console (comment out line if
@@ -75,15 +77,15 @@ void setup() {
 
 void loop() {
   delay(50);
-
-  lx = [REPLACE THIS STUFF];
-  ly = [REPLACE THIS STUFF];
-  lt = [REPLACE THIS STUFF];
-  rx = [REPLACE THIS STUFF];
-  ry = [REPLACE THIS STUFF];
-  rt = [REPLACE THIS STUFF];
-  lb = [REPLACE THIS STUFF];
-  rb = [REPLACE THIS STUFF];
+  rxControls(controls);
+  lx = controls[0];
+  ly = controls[0];
+  lt = controls[0];
+  rx = controls[0];
+  ry = controls[0];
+  rt = controls[0];
+  lb = 0;
+  rb = 0;
 
   char radiopacket[] = {lx, ly, lt, rx, ry, rt, lb, rb}; 
 
@@ -121,4 +123,28 @@ uint8_t clamp8(int val) {
   }
   uint8_t out = (uint8_t)val;
   return out;
+}
+
+void rxControls(uint8* controls) {
+  numRx = 0;
+  uint8_t received[6];
+  while (Serial.available() > 0){
+    recieved[numRx] = Serial.read();
+    if (received[numRx] == 0xFF){
+      break;
+    }
+    if (numRx > 5){
+      return;
+    }
+  numRx += 1;
+  }
+  if (numRx == 5){
+    for (int i = 0; i < 6; i++){
+      *controls[i] = received[i];
+    }
+    return;
+  }
+  else{
+    return;
+  }
 }
