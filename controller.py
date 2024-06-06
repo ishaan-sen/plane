@@ -1,5 +1,6 @@
 import pygame
-# import time
+import threading
+import time
 
 pygame.init()
 pygame.joystick.init()
@@ -16,13 +17,21 @@ print("Joystick Name:", joystick.get_name())
 
 axes = [0, 0, 0, 0, 0, 0]  # lx, ly, lt, rx, ry, rt
 
+
+last_out = time.time()
+
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.JOYAXISMOTION:
-            print("Axis:", event.axis, "Value:", event.value)
-            axes[event.axis] = event.value * [1, -1, 1, 1, -1, 1][event.axis]
+    event = pygame.event.wait()
+    if event.type == pygame.JOYAXISMOTION:
+        # print("Axis:", event.axis, "Value:", event.value)
+        axes[event.axis] = event.value * [1, -1, 1, 1, -1, 1][event.axis]
 
     out = [int((x + 1.0) * 128.0) for x in axes]
     # print(["%0.2f" % i for i in axes])
-    print(["%0.2f" % i for i in out])
+    now = time.time()
+    if now - last_out > 0.1:
+        last_out = now
+        for val in out:
+            print(val, end='\t')
+        print()
  
