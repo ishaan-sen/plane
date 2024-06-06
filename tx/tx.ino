@@ -125,7 +125,7 @@ uint8_t clamp8(int val) {
   return out;
 }
 
-void rxControls(uint8* controls) {
+void rxControls(uint8_t* controls) {
   numRx = 0;
   uint8_t received[6];
   while (Serial.available() > 0){
