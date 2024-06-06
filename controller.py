@@ -1,4 +1,5 @@
 import os
+import sys
 import pygame
 import threading
 import time
@@ -8,13 +9,12 @@ pygame.joystick.init()
 
 # Check if a joystick is connected
 if pygame.joystick.get_count() == 0:
-    print("No joystick connected")
+    print("No joystick connected", file=sys.stderr)
     exit(1)
 
 joystick = pygame.joystick.Joystick(0)
 joystick.init()
 
-print("Joystick Name:", joystick.get_name())
 
 axes = [0, 0, 0, 0, 0, 0]  # lx, ly, lt, rx, ry, rt
 
